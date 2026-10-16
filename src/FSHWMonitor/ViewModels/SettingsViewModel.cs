@@ -158,7 +158,10 @@ public sealed class SettingsViewModel : ObservableObject
         }
     }
 
-    public bool CanStartWithWindows => Elevation.IsAdministrator && !_host.IsDemo;
+    static bool IsInstalledCopy => StartupTask.IsProtectedLocation(Environment.ProcessPath!);
+
+    /// <summary>Turning it on needs the installed copy; turning it off always works.</summary>
+    public bool CanStartWithWindows => Elevation.IsAdministrator && !_host.IsDemo && (IsInstalledCopy || StartWithWindows);
 
     public bool StartWithWindows
     {
@@ -167,8 +170,13 @@ public sealed class SettingsViewModel : ObservableObject
         {
             _host.SetStartupTask(value);
             OnPropertyChanged();
+            OnPropertyChanged(nameof(CanStartWithWindows));
         }
     }
+
+    public string StartWithWindowsHint => IsInstalledCopy
+        ? "Starts the installed copy when you sign in."
+        : "Needs the installed version. A copy outside Program Files could be swapped by another program to get administrator rights when you sign in.";
 
     // Cards
 

@@ -77,8 +77,7 @@
                                Text="Click the tray icon by the clock to bring it back. Right-click &gt; Exit still quits." />
                     <CheckBox Content="Start with Windows (as administrator, no UAC prompt)" IsChecked="{Binding StartWithWindows}"
                               IsEnabled="{Binding CanStartWithWindows}" Margin="0,12,0,0" />
-                    <TextBlock Style="{StaticResource Hint}" Margin="28,6,0,0"
-                               Text="Runs the .exe from where it is now. If you move it, turn this off and on again." />
+                    <TextBlock Style="{StaticResource Hint}" Margin="28,6,0,0" Text="{Binding StartWithWindowsHint, Mode=OneWay}" />
                 </StackPanel>
             </ScrollViewer>
         </TabItem>

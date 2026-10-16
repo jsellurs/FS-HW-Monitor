@@ -41,7 +41,7 @@
 - **Pick the sensor behind any gauge,** for example GPU hot spot instead of core, or a specific drive.
 - **Six built-in themes, plus your own** from a small JSON file. The default, **Full Send**, matches [fullsendwow.com](https://fullsendwow.com): flat charcoal cards, the blue/red FS mark, and Poppins and PT Sans type.
 - **Night mode:** dims or blacks out the dashboard on a schedule, and lights back up if anything runs hot.
-- **Settings window, °C / °F, always on top, close to tray,** and **Start with Windows** (starts elevated at sign-in with no UAC prompt).
+- **Settings window, °C / °F, always on top, close to tray,** and **Start with Windows** (starts elevated at sign-in with no UAC prompt; installed version only, so no other program can swap the exe it runs).
 - **A normal installer, or one portable `.exe`.** Either way, no .NET install needed.
 
 ### Themes
