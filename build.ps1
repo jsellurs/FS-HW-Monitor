@@ -5,18 +5,26 @@
 #   dist\FS-HW-Monitor-Setup-<version>.exe
 #   dist\FS HW Monitor <version>\  (setup + Read me.txt)  and  dist\FS HW Monitor <version>.zip
 # Requires Inno Setup 6:  winget install JRSoftware.InnoSetup
+#
+# -Sign signs the exe, the installer and its uninstaller with Azure Trusted Signing (see tools\sign.ps1).
 
-param([switch]$Package)
+param([switch]$Package, [switch]$Sign)
 
 $ErrorActionPreference = 'Stop'
 $project = Join-Path $PSScriptRoot 'src\FSHWMonitor\FSHWMonitor.csproj'
 $dist = Join-Path $PSScriptRoot 'dist'
+$signScript = Join-Path $PSScriptRoot 'tools\sign.ps1'
 $version = (Select-Xml -Path $project -XPath '//Version').Node.InnerText
 
 dotnet publish $project -c Release -o $dist --nologo
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $exe = Get-Item (Join-Path $dist 'FSHWMonitor.exe')
+if ($Sign) {
+    # Always Windows PowerShell: that's where the TrustedSigning module lives.
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -File $signScript $exe.FullName
+    if ($LASTEXITCODE -ne 0) { throw 'Signing the exe failed.' }
+}
 Write-Host ("Built {0} {1} ({2:N1} MB)" -f $exe.FullName, $version, ($exe.Length / 1MB))
 
 if (-not $Package) { return }
@@ -28,7 +36,12 @@ $iscc = @(
 ) | Where-Object { Test-Path $_ } | Select-Object -First 1
 if (-not $iscc) { throw 'Inno Setup 6 not found. Install it with: winget install JRSoftware.InnoSetup' }
 
-& $iscc /Qp "/DAppVersion=$version" (Join-Path $PSScriptRoot 'installer\FSHWMonitor.iss')
+$isccArgs = @('/Qp', "/DAppVersion=$version")
+if ($Sign) {
+    # Inno Setup replaces $f with the quoted path of each file it signs.
+    $isccArgs += '/DSign', "/Sfssign=powershell.exe -NoProfile -ExecutionPolicy Bypass -File `$q$signScript`$q `$f"
+}
+& $iscc @isccArgs (Join-Path $PSScriptRoot 'installer\FSHWMonitor.iss')
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 $setup = Get-Item (Join-Path $dist "FS-HW-Monitor-Setup-$version.exe")
 

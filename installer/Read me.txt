@@ -10,8 +10,8 @@ INSTALL
 
 1. Run FS-HW-Monitor-Setup-{VERSION}.exe
 
-   Windows may show "Windows protected your PC", because the app isn't
-   code-signed yet. Click "More info", then "Run anyway".
+   If Windows shows "Windows protected your PC" (it can for new
+   downloads), click "More info", then "Run anyway".
 
 2. Leave "Install the PawnIO sensor driver" ticked. CPU, RAM and fan
    temperatures need it. (It isn't shown if you already have it.)

@@ -34,6 +34,11 @@ MinVersion=10.0
 ; Close a running copy before replacing it.
 CloseApplications=yes
 RestartApplications=no
+#ifdef Sign
+; build.ps1 -Sign defines the "fssign" command; this signs the setup and its uninstaller.
+SignTool=fssign
+SignedUninstaller=yes
+#endif
 
 [Tasks]
 Name: "desktopicon"; Description: "Create a desktop shortcut"

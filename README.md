@@ -169,6 +169,8 @@ This also writes the following to `dist`:
 
 The installer script is `installer\FSHWMonitor.iss`.
 
+Add `-Sign` to sign the `.exe`, the installer and its uninstaller with Azure Trusted Signing. It needs a `signing.json` with your signing account next to `build.ps1`; `tools\sign.ps1` explains the setup.
+
 To regenerate the icon, run `tools\make-icon.ps1` in Windows PowerShell.
 
 ### Project layout

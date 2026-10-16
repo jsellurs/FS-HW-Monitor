@@ -4,6 +4,9 @@ obj/
 dist/
 *.zip
 
+# Code signing account details (see tools/sign.ps1)
+signing.json
+
 # IDE
 .vs/
 .vscode/
