@@ -1,0 +1,49 @@
+FS HW Monitor {VERSION}
+{UNDERLINE}
+
+A live temperature dashboard for your PC: CPU, GPU, RAM, SSD and fans, with
+gauges and high / average / low for each. Made for the little screen inside a
+PC case, but it works on any monitor.
+
+
+INSTALL
+
+1. Run FS-HW-Monitor-Setup-{VERSION}.exe
+
+   Windows may show "Windows protected your PC", because the app isn't
+   code-signed yet. Click "More info", then "Run anyway".
+
+2. Leave "Install the PawnIO sensor driver" ticked. CPU, RAM and fan
+   temperatures need it. (It isn't shown if you already have it.)
+
+3. Click Install. The dashboard starts when setup finishes.
+
+
+USING IT
+
+- It finds a small in-case screen (1280x800, 1920x480, 800x1280 and others)
+  on its own and fills it. Without one, it opens as a normal window.
+
+- Right-click anywhere for the menu. "Settings..." has everything: theme,
+  layout, which cards to show, warning temperatures, fan names, night mode.
+
+- Hover "Most used" on a card to see which apps use that part the most.
+
+- Double-click a card to reset its high / average / low.
+
+- Want closing to hide it instead of quitting? Turn on
+  Settings > General > "Closing hides to the tray". Click the tray icon by
+  the clock to bring it back.
+
+- Make your own theme: right-click > Theme > Open themes folder, copy
+  OceanTemplate.json, rename the copy and edit it. Every setting is explained
+  inside the file.
+
+- It asks for administrator rights each time it starts, because that's
+  needed to read the sensors. To skip the prompt, turn on
+  Settings > General > "Start with Windows".
+
+
+UNINSTALL
+
+Windows Settings > Apps > Installed apps > FS HW Monitor > Uninstall.

@@ -1,0 +1,73 @@
+{
+  // STARTER THEME. To make your own: copy this file, rename the copy (e.g. MyTheme.json),
+  // change "Name" below, then edit the colors. Pick it under Right-click > Theme.
+  // Save the file and pick the theme again to see changes.
+
+  // Shows up under Right-click > Theme. Must be different from every other theme's name.
+  "Name": "Ocean (Template)",
+
+  // Anything you leave out is copied from this built-in theme:
+  // "Full Send", "Neon", "Carbon", "Synthwave", "Frost" or "Terminal".
+  "Base": "Full Send",
+
+  // Colors are "#RRGGBB", or "#AARRGGBB" where AA is transparency (00 = invisible, FF = solid).
+
+  // Page background, top to bottom, plus two soft glows (top-left and bottom-right). "#00000000" turns a glow off.
+  "BackdropTop": "#0B1A26",
+  "BackdropBottom": "#07121B",
+  "GlowA": "#2222D3EE",
+  "GlowB": "#1A3B82F6",
+
+  // Cards
+  "CardTop": "#10222F",
+  "CardBottom": "#0D1C27",
+  "CardEdge": "#173041",
+  "CardEdgeBottom": "#122838",
+  "CardAccentEdge": 0.6,       // 0 = plain border, 1 = the card's color glows along its top edge
+
+  // Boxes inside cards: High/Avg/Low, history chart, popups, notices
+  "Inset": "#0E1E2A",
+  "InsetBorder": "#173041",
+  "Divider": "#1F3A4E",
+  "Hairline": "#15293A",
+  "Chart": "#0A1720",
+  "ChartBorder": "#15293A",
+  "Pill": "#10222F",
+  "PillBorder": "#1F3A4E",
+
+  // Text
+  "TextPrimary": "#E6F4F8",
+  "TextSecondary": "#8FB3C2",
+  "Muted": "#5E8191",
+
+  // One color per card
+  "Cpu": "#22D3EE",
+  "Gpu": "#38BDF8",
+  "Ram": "#818CF8",
+  "Ssd": "#2DD4BF",
+  "Cooling": "#A5F3FC",
+
+  // Status colors
+  "Warm": "#FBBF24",           // gauge zone and card when a part runs warm
+  "Hot": "#F43F5E",            // ... and when it runs hot
+  "HighStat": "#FB7185",       // "HIGH" label and high marker on the ring
+  "LowStat": "#67E8F9",        // "LOW" label and low marker
+
+  // Gauge
+  "Tick": "#CFFAFE",           // tick marks around the ring
+  "GlowOpacity": 0.7,          // neon glow behind the ring, 0 = flat
+  "DimAlpha": 0.14,            // how visible the unlit segments are, 0 to 1
+
+  // Fonts: any font installed in Windows (e.g. "Segoe UI", "Bahnschrift"),
+  // or the bundled "embedded:Poppins" / "embedded:PT Sans"
+  "TitleFont": "embedded:Poppins",   // titles, numbers, labels
+  "BodyFont": "embedded:PT Sans",    // names and descriptions
+  "TrackedTitle": false,             // true = spaced-out "F S  H W  M O N I T O R"
+
+  // Header mark: "fs-mark" = the FS logo, null = the gauge-ring logo
+  "LogoImage": "fs-mark",
+
+  // Colors of the "F" and "S" in the title. Set both to null to blend the card colors instead.
+  "BrandPrimary": "#22D3EE",
+  "BrandSecondary": "#818CF8"
+}

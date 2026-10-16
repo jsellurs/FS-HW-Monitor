@@ -1,0 +1,111 @@
+<Application x:Class="FSHWMonitor.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:FSHWMonitor.Controls">
+    <Application.Resources>
+      <ResourceDictionary>
+        <ResourceDictionary.MergedDictionaries>
+            <!-- Dark controls for the settings window and prompts (the dashboard itself has no such controls). -->
+            <ResourceDictionary Source="Styles/Dialogs.xaml" />
+        </ResourceDictionary.MergedDictionaries>
+
+        <!-- Theme colors and brushes are added at runtime by Theme/ThemeManager.cs. -->
+
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility" />
+        <controls:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibility" />
+
+        <!-- The right-click menu stays dark in every theme. -->
+        <SolidColorBrush x:Key="MenuBackgroundBrush" Color="#F7222429" />
+        <SolidColorBrush x:Key="MenuBorderBrush" Color="#2C2F35" />
+        <SolidColorBrush x:Key="MenuTextBrush" Color="#F2F4F7" />
+        <SolidColorBrush x:Key="MenuMutedBrush" Color="#8B929D" />
+        <SolidColorBrush x:Key="MenuCheckBrush" Color="#8FB3FF" />
+        <SolidColorBrush x:Key="MenuHighlightBrush" Color="#2D3036" />
+
+        <Style TargetType="ContextMenu">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Setter Property="HasDropShadow" Value="False" />
+            <Setter Property="FontFamily" Value="{DynamicResource BrandTitleFont}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContextMenu">
+                        <Border Background="{StaticResource MenuBackgroundBrush}" BorderBrush="{StaticResource MenuBorderBrush}"
+                                BorderThickness="1" CornerRadius="10" Padding="6">
+                            <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="MenuItem">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Foreground" Value="{StaticResource MenuTextBrush}" />
+            <Setter Property="FontFamily" Value="{DynamicResource BrandTitleFont}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="MenuItem">
+                        <Border x:Name="Bd" Background="Transparent" CornerRadius="6" Padding="8,7,10,7" MinWidth="230">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="24" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="18" />
+                                </Grid.ColumnDefinitions>
+                                <Path x:Name="Check" Data="M0,4.5 L3.6,8 L10,1" Stroke="{StaticResource MenuCheckBrush}" StrokeThickness="2"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                                      VerticalAlignment="Center" Visibility="Collapsed" />
+                                <ContentPresenter Grid.Column="1" ContentSource="Header" RecognizesAccessKey="False" VerticalAlignment="Center" />
+                                <Path x:Name="Arrow" Grid.Column="2" Data="M0,0 L4,4 L0,8" Stroke="{StaticResource MenuMutedBrush}" StrokeThickness="1.6"
+                                      StrokeStartLineCap="Round" StrokeEndLineCap="Round" StrokeLineJoin="Round"
+                                      HorizontalAlignment="Right" VerticalAlignment="Center" Visibility="Collapsed" />
+
+                                <!-- Sub-menu (Theme, Layout, Display...) -->
+                                <Popup x:Name="PART_Popup" Placement="Right" HorizontalOffset="14" VerticalOffset="-14"
+                                       AllowsTransparency="True" Focusable="False" PopupAnimation="Fade"
+                                       IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}">
+                                    <Border Background="{StaticResource MenuBackgroundBrush}" BorderBrush="{StaticResource MenuBorderBrush}"
+                                            BorderThickness="1" CornerRadius="10" Padding="6">
+                                        <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+                                    </Border>
+                                </Popup>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Role" Value="SubmenuHeader">
+                                <Setter TargetName="Arrow" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="Check" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource MenuHighlightBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsSubmenuOpen" Value="True">
+                                <Setter TargetName="Bd" Property="Background" Value="{StaticResource MenuHighlightBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="{StaticResource MenuMutedBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="{x:Static MenuItem.SeparatorStyleKey}" TargetType="Separator">
+            <Setter Property="OverridesDefaultStyle" Value="True" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Separator">
+                        <Border Height="1" Margin="8,5" Background="#2C2F35" />
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+      </ResourceDictionary>
+    </Application.Resources>
+</Application>

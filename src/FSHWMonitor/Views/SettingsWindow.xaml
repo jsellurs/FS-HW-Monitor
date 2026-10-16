@@ -1,0 +1,320 @@
+<Window x:Class="FSHWMonitor.Views.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="clr-namespace:FSHWMonitor.ViewModels"
+        Title="FS HW Monitor · Settings"
+        Style="{StaticResource DialogWindow}"
+        Icon="/Assets/fshw.ico"
+        Width="920" Height="660" MinWidth="820" MinHeight="560"
+        WindowStartupLocation="Manual">
+
+    <Window.Resources>
+        <Style x:Key="ColumnHeader" TargetType="TextBlock" BasedOn="{StaticResource SectionLabel}">
+            <Setter Property="Margin" Value="0,14,0,6" />
+        </Style>
+    </Window.Resources>
+
+    <TabControl x:Name="Tabs">
+
+        <!-- General -->
+        <TabItem Header="General">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel MaxWidth="620" HorizontalAlignment="Left">
+                    <TextBlock Text="General" Style="{StaticResource Heading}" />
+                    <TextBlock Style="{StaticResource Hint}" Text="Changes apply to the dashboard right away and are saved automatically." />
+
+                    <Grid Margin="0,20,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Theme" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Column="1" Margin="0,5" ItemsSource="{Binding Themes}" SelectedItem="{Binding SelectedTheme}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Ellipse Width="9" Height="9" Margin="0,0,4,0"><Ellipse.Fill><SolidColorBrush Color="{Binding Cpu}" /></Ellipse.Fill></Ellipse>
+                                        <Ellipse Width="9" Height="9" Margin="0,0,4,0"><Ellipse.Fill><SolidColorBrush Color="{Binding Gpu}" /></Ellipse.Fill></Ellipse>
+                                        <Ellipse Width="9" Height="9" Margin="0,0,4,0"><Ellipse.Fill><SolidColorBrush Color="{Binding Ram}" /></Ellipse.Fill></Ellipse>
+                                        <Ellipse Width="9" Height="9" Margin="0,0,10,0"><Ellipse.Fill><SolidColorBrush Color="{Binding Ssd}" /></Ellipse.Fill></Ellipse>
+                                        <TextBlock Text="{Binding Name}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="1" Text="Layout" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,5" ItemsSource="{Binding Layouts}" SelectedItem="{Binding SelectedLayout}" />
+
+                        <TextBlock Grid.Row="2" Text="Display" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Row="2" Grid.Column="1" Margin="0,5" ItemsSource="{Binding Displays}" SelectedItem="{Binding SelectedDisplay}" />
+
+                        <TextBlock Grid.Row="3" Text="Units" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Row="3" Grid.Column="1" Margin="0,5" SelectedIndex="{Binding UnitsIndex}">
+                            <ComboBoxItem Content="Celsius (°C)" />
+                            <ComboBoxItem Content="Fahrenheit (°F)" />
+                        </ComboBox>
+
+                        <TextBlock Grid.Row="4" Text="Update" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Row="4" Grid.Column="1" Margin="0,5" ItemsSource="{Binding Intervals}" SelectedItem="{Binding SelectedInterval}" />
+
+                        <TextBlock Grid.Row="5" Text="History graph" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Row="5" Grid.Column="1" Margin="0,5" ItemsSource="{Binding HistoryLengths}" SelectedItem="{Binding SelectedHistory}" />
+                    </Grid>
+
+                    <CheckBox Content="Always on top" IsChecked="{Binding AlwaysOnTop}" Margin="0,20,0,0" />
+                    <CheckBox Content="Closing hides to the tray (keeps monitoring)" IsChecked="{Binding CloseToTray}" Margin="0,12,0,0" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="28,6,0,0"
+                               Text="Click the tray icon by the clock to bring it back. Right-click &gt; Exit still quits." />
+                    <CheckBox Content="Start with Windows (as administrator, no UAC prompt)" IsChecked="{Binding StartWithWindows}"
+                              IsEnabled="{Binding CanStartWithWindows}" Margin="0,12,0,0" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="28,6,0,0"
+                               Text="Runs the .exe from where it is now. If you move it, turn this off and on again." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- Cards -->
+        <TabItem Header="Cards">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Cards" Style="{StaticResource Heading}" />
+                    <TextBlock Style="{StaticResource Hint}">
+                        <Run Text="Choose which cards show and in what order, which sensor drives each gauge, and where it turns" />
+                        <Run Text="amber (warm) and red (hot). Temperatures are in" /><Run Text=" " /><Run Text="{Binding UnitLabel, Mode=OneWay}" /><Run Text="." />
+                    </TextBlock>
+
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="118" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="66" />
+                            <ColumnDefinition Width="66" />
+                            <ColumnDefinition Width="66" />
+                            <ColumnDefinition Width="72" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="SHOW" Style="{StaticResource ColumnHeader}" />
+                        <TextBlock Grid.Column="1" Text="GAUGE SENSOR" Style="{StaticResource ColumnHeader}" />
+                        <TextBlock Grid.Column="2" Text="WARM" Style="{StaticResource ColumnHeader}" Margin="8,14,0,6" />
+                        <TextBlock Grid.Column="3" Text="HOT" Style="{StaticResource ColumnHeader}" Margin="8,14,0,6" />
+                        <TextBlock Grid.Column="4" Text="MAX" Style="{StaticResource ColumnHeader}" Margin="8,14,0,6" />
+                        <TextBlock Grid.Column="5" Text="ORDER" Style="{StaticResource ColumnHeader}" Margin="10,14,0,6" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Cards}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:CardRowViewModel}">
+                                <Grid Margin="0,4">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="118" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="66" />
+                                        <ColumnDefinition Width="66" />
+                                        <ColumnDefinition Width="66" />
+                                        <ColumnDefinition Width="72" />
+                                    </Grid.ColumnDefinitions>
+                                    <CheckBox Content="{Binding Title}" IsChecked="{Binding Visible}" FontWeight="SemiBold" />
+                                    <ComboBox Grid.Column="1" ItemsSource="{Binding SensorOptions}" SelectedItem="{Binding SelectedSensor}" />
+                                    <TextBox Grid.Column="2" Margin="8,0,0,0" Text="{Binding Warn, ValidatesOnExceptions=True}" />
+                                    <TextBox Grid.Column="3" Margin="8,0,0,0" Text="{Binding Crit, ValidatesOnExceptions=True}" />
+                                    <TextBox Grid.Column="4" Margin="8,0,0,0" Text="{Binding Max, ValidatesOnExceptions=True}" />
+                                    <StackPanel Grid.Column="5" Orientation="Horizontal" Margin="10,0,0,0">
+                                        <Button Style="{StaticResource IconButton}" Command="{Binding MoveUpCommand}" ToolTip="Move up">
+                                            <Path Data="M0,5 L5,0 L10,5" Stroke="{StaticResource DlgMuted}" StrokeThickness="1.6" />
+                                        </Button>
+                                        <Button Style="{StaticResource IconButton}" Command="{Binding MoveDownCommand}" ToolTip="Move down" Margin="4,0,0,0">
+                                            <Path Data="M0,0 L5,5 L10,0" Stroke="{StaticResource DlgMuted}" StrokeThickness="1.6" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,16,0,0"
+                               Text="Automatic picks Tctl/Tdie for AMD CPUs (package on Intel), the GPU core, the hottest DIMM, the hottest drive, and an AIO's liquid sensor. Double-click a card on the dashboard to reset its high / avg / low." />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- Cooling -->
+        <TabItem Header="Cooling">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <TextBlock Text="Cooling" Style="{StaticResource Heading}" />
+                    <TextBlock Style="{StaticResource Hint}"
+                               Text="The Cooling card shows one temperature (an AIO's liquid sensor when there is one) and up to five fans or pumps. Motherboards don't say which header is which, so give the ones you care about a name." />
+
+                    <CheckBox Content="Show the Cooling card" IsChecked="{Binding CoolingCard.Visible}" Margin="0,18,0,0" />
+
+                    <Grid Margin="0,14,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="160" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="Gauge temperature" Style="{StaticResource FieldLabel}" />
+                        <ComboBox Grid.Column="1" ItemsSource="{Binding CoolingCard.SensorOptions}" SelectedItem="{Binding CoolingCard.SelectedSensor}" />
+                    </Grid>
+
+                    <Grid Margin="0,8,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="230" />
+                            <ColumnDefinition Width="110" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="70" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="HEADER" Style="{StaticResource ColumnHeader}" />
+                        <TextBlock Grid.Column="1" Text="NOW" Style="{StaticResource ColumnHeader}" />
+                        <TextBlock Grid.Column="2" Text="NAME ON THE CARD" Style="{StaticResource ColumnHeader}" />
+                        <TextBlock Grid.Column="3" Text="SHOW" Style="{StaticResource ColumnHeader}" Margin="12,14,0,6" />
+                    </Grid>
+
+                    <ItemsControl ItemsSource="{Binding Fans}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate DataType="{x:Type vm:FanRowViewModel}">
+                                <Grid Margin="0,3">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="230" />
+                                        <ColumnDefinition Width="110" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="70" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="1" Text="{Binding RpmText}" VerticalAlignment="Center" Foreground="{StaticResource DlgMuted}" />
+                                    <TextBox Grid.Column="2" Text="{Binding Label}" />
+                                    <CheckBox Grid.Column="3" IsChecked="{Binding Show}" Margin="14,0,0,0" />
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,8,0,0"
+                               Visibility="{Binding NoFans, Converter={StaticResource BoolToVisibility}}"
+                               Text="No fan headers found. Fan readings need administrator rights and the PawnIO driver." />
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                               Text="Fans at 0 RPM are left off the card unless you name them. Tip: unplug or stop a fan for a moment to see which header it is." />
+                    <Button Content="Refresh readings" Command="{Binding RefreshFansCommand}" HorizontalAlignment="Left" Margin="0,14,0,0" />
+
+                    <CheckBox Content="Also read USB AIO coolers and fan hubs (Corsair, NZXT, Aquacomputer...)" IsChecked="{Binding ReadUsbCoolers}" Margin="0,22,0,0" />
+                    <TextBlock Style="{StaticResource Hint}" Margin="28,6,0,0"
+                               Text="Off by default: reading them alongside iCUE, NZXT CAM or Synapse can upset either app. Takes effect after a restart." />
+                    <TextBlock Text="Restart FS HW Monitor to apply." Foreground="{StaticResource DlgWarn}" Margin="28,6,0,0"
+                               Visibility="{Binding UsbRestartNeeded, Converter={StaticResource BoolToVisibility}}" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- Night mode -->
+        <TabItem Header="Night mode">
+            <StackPanel MaxWidth="620" HorizontalAlignment="Left">
+                <TextBlock Text="Night mode" Style="{StaticResource Heading}" />
+                <TextBlock Style="{StaticResource Hint}"
+                           Text="Dims or blacks out the dashboard on a schedule, for a PC in a bedroom. It's done in software, so the screen's backlight stays on; click the dashboard to light it up for a minute." />
+
+                <CheckBox Content="Turn on night mode" IsChecked="{Binding NightEnabled}" Margin="0,20,0,0" />
+
+                <Grid Margin="0,16,0,0" IsEnabled="{Binding NightEnabled}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="160" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Text="From" Style="{StaticResource FieldLabel}" />
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,5">
+                        <TextBox Width="80" Text="{Binding NightStart, ValidatesOnExceptions=True}" />
+                        <TextBlock Text="to" Margin="12,0" Style="{StaticResource FieldLabel}" />
+                        <TextBox Width="80" Text="{Binding NightEnd, ValidatesOnExceptions=True}" />
+                        <TextBlock Text="24-hour time" Margin="12,0,0,0" Style="{StaticResource FieldLabel}" Foreground="{StaticResource DlgFaint}" />
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" Text="At night" Style="{StaticResource FieldLabel}" />
+                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,5" Width="220" HorizontalAlignment="Left" SelectedIndex="{Binding NightModeIndex}">
+                        <ComboBoxItem Content="Dim the dashboard" />
+                        <ComboBoxItem Content="Black out the screen" />
+                    </ComboBox>
+
+                    <TextBlock Grid.Row="2" Text="Brightness" Style="{StaticResource FieldLabel}" />
+                    <StackPanel Grid.Row="2" Grid.Column="1" Orientation="Horizontal" Margin="0,8" IsEnabled="{Binding CanSetBrightness}">
+                        <Slider Width="260" Minimum="5" Maximum="90" Value="{Binding NightBrightness}" />
+                        <TextBlock Text="{Binding NightBrightnessText}" Margin="14,0,0,0" Style="{StaticResource FieldLabel}" />
+                    </StackPanel>
+                </Grid>
+
+                <CheckBox Content="Light back up while anything runs hot" IsChecked="{Binding WakeWhenHot}" Margin="0,14,0,0"
+                          IsEnabled="{Binding NightEnabled}" />
+            </StackPanel>
+        </TabItem>
+
+        <!-- Themes -->
+        <TabItem Header="Themes">
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel MaxWidth="640" HorizontalAlignment="Left">
+                    <TextBlock Text="Themes" Style="{StaticResource Heading}" />
+                    <TextBlock Style="{StaticResource Hint}"
+                               Text="Make your own theme with a small JSON file in the themes folder. It starts from a built-in theme and only needs the colors you change. Colors are #RRGGBB, or #AARRGGBB with transparency." />
+
+                    <Border Margin="0,16,0,0" Padding="14,12" CornerRadius="8" Background="{StaticResource DlgInput}" BorderBrush="{StaticResource DlgBorder}" BorderThickness="1">
+                        <TextBlock FontFamily="Cascadia Mono, Consolas" FontSize="12.5" Foreground="{StaticResource DlgMuted}" xml:space="preserve">{
+  "Name": "Sunset",
+  "Base": "Neon",
+  "Cpu": "#FB923C",
+  "Gpu": "#F472B6",
+  "BackdropTop": "#1A0F14"
+}</TextBlock>
+                    </Border>
+
+                    <TextBlock Style="{StaticResource Hint}" Margin="0,12,0,0"
+                               Text="Easiest start: the themes folder already has OceanTemplate.json, with every setting explained. Copy it, rename the copy, change its Name, then edit and reload. Or save the current theme as a file to start from that." />
+
+                    <WrapPanel Margin="0,16,0,0">
+                        <Button Content="Save current theme as a file" Style="{StaticResource AccentButton}" Command="{Binding SaveThemeTemplateCommand}" Margin="0,0,10,10" />
+                        <Button Content="Open themes folder" Command="{Binding OpenThemesFolderCommand}" Margin="0,0,10,10" />
+                        <Button Content="Reload themes" Command="{Binding ReloadThemesCommand}" Margin="0,0,10,10" />
+                    </WrapPanel>
+                    <TextBlock Text="{Binding ThemeMessage}" Foreground="{StaticResource DlgMuted}" Margin="0,4,0,0" />
+                    <TextBlock Text="{Binding ThemesFolder}" Style="{StaticResource Hint}" Margin="0,6,0,0" />
+                </StackPanel>
+            </ScrollViewer>
+        </TabItem>
+
+        <!-- About -->
+        <TabItem Header="About">
+            <StackPanel MaxWidth="620" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/Assets/fshw.ico" Width="56" Height="56" />
+                    <StackPanel Margin="16,0,0,0" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Version}" Style="{StaticResource Heading}" />
+                        <TextBlock Text="Live hardware temperatures for in-case displays." Foreground="{StaticResource DlgMuted}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <WrapPanel Margin="0,24,0,0">
+                    <Button Content="Save sensor report to Desktop" Command="{Binding SaveReportCommand}" Margin="0,0,10,10" />
+                    <Button Content="Open settings folder" Command="{Binding OpenSettingsFolderCommand}" Margin="0,0,10,10" />
+                    <Button Content="Install sensor driver (PawnIO)" Command="{Binding InstallDriverCommand}" Margin="0,0,10,10"
+                            Visibility="{Binding DriverMissing, Converter={StaticResource BoolToVisibility}}" />
+                </WrapPanel>
+                <TextBlock Style="{StaticResource Hint}" Margin="0,6,0,0"
+                           Text="If a sensor is missing or wrong, the sensor report lists everything the app can see. Attach it when you report a problem." />
+
+                <TextBlock Text="CREDITS" Style="{StaticResource SectionLabel}" Margin="0,26,0,8" />
+                <TextBlock Style="{StaticResource Hint}"
+                           Text="Hardware access: LibreHardwareMonitorLib (MPL-2.0). Kernel driver: PawnIO by namazso. FS HW Monitor is open source under the MIT license." />
+            </StackPanel>
+        </TabItem>
+    </TabControl>
+</Window>
